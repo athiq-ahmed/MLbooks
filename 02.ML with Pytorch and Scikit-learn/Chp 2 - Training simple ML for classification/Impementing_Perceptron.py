@@ -116,3 +116,14 @@ plt.ylabel('Petal length[cm]')
 plt.legend(loc='upper left')
 plt.show()
 
+
+"""
+Perceptron convergence Although the perceptron classified the two Iris flower classes perfectly, convergence is one of the biggest problems of the perceptron. 
+
+Rosenblatt proved mathematically that the perceptron learning rule converges if the two classes can be separated by a linear hyperplane. 
+
+However, if the classes cannot be separated perfectly by such a linear decision boundary, the weights will never stop updating unless we set a 
+maximum number of epochs.
+
+
+"""
