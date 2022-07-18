@@ -3,9 +3,19 @@ import pandas as pd
 import numpy as np
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+
 
 pd.set_option('display.width', 1000)
 
+"""
+The perceptron receives the inputs of an example (x) and combines them with the bias unit (b) and weights (w) to compute the net input. 
+
+The net input is then passed on to the threshold function, which generates a binary output of 0 or 1—the predicted class label of the example. 
+
+During the learning phase, this output is used to calculate the error of the prediction and update the weights and bias unit.
+
+"""
 
 class Perceptron:
     def __init__(self, eta=0.01, n_iter=100, random_state=1):
@@ -61,13 +71,48 @@ plt.ylabel('Petal length[cm]')
 plt.legend(loc='upper left')
 plt.show()
 
+
+# A plot of the misclassification errors against the number of epochs
 ppn = Perceptron(eta=0.1, n_iter=10)
 ppn.fit(X, y)
-
-len(ppn.errors_)
-
-plt.plot(range(1, len(ppn.errors_)+1, ppn.errors_, marker='o'))
+plt.plot(range(1, len(ppn.errors_)+1), ppn.errors_, marker='o')
 plt.xlabel('Epochs')
 plt.ylabel('Number of updates')
+plt.show()
+
+# visualize the decision boundaries for two-dimensional datasets:
+def plot_decision_regions(X, y, classifier, resolution=0.02):
+    # setup marker generator and color map
+    markers = ('o', 's', '^', 'v', '<')
+    colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
+    cmap = ListedColormap(colors[:len(np.unique(y))])
+
+    # plot the decision surface
+    x1_min, x1_max = X[:, 0].min()-1, X[:, 0].max()+1 
+    x2_min, x2_max = X[:, 1].min()-1, X[:, 1].max()+1 
+    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution), 
+                            np.arange(x2_min, x2_max, resolution))         # grid arrays
+    lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)                  # flatten the grid arrays
+    lab = lab.reshape(xx1.shape)                                                      # reshaping with same dimensions as xx1 and xx2
+
+    plt.contourf(xx1, xx2, lab, alpha=0.3, cmap=cmap)
+    plt.xlim(xx1.min(), xx1.max())
+    plt.ylim(xx2.min(), xx2.max())
+
+    for idx, cl in enumerate(np.unique(y)):
+        plt.scatter(
+            x = X[y==cl, 0],
+            y = X[y==cl, 1], 
+            alpha = 0.8,
+            c = colors[idx],
+            marker = markers[idx],
+            label = f'Class{cl}',
+            edgecolor = 'black'
+        )
+
+plot_decision_regions(X, y, classifier=ppn)
+plt.xlabel('Sepal length[cm]')
+plt.ylabel('Petal length[cm]')
+plt.legend(loc='upper left')
 plt.show()
 
